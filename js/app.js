@@ -26,39 +26,11 @@ const Toast = Swal.mixin({
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // --- Sistem Login ---
-    const loginBtn = document.getElementById("login-btn");
-    const pinInput = document.getElementById("pin-input");
-    const loginOverlay = document.getElementById("login-overlay");
-    const mainDashboard = document.getElementById("main-dashboard");
-    
-    pinInput.addEventListener("keyup", (e) => { if(e.key === "Enter") loginBtn.click(); });
+    // 1. Langsung nyalakan scanner & muat data dari Firebase
+    document.dispatchEvent(new Event("dashboardReady"));
+    muatRiwayatRealtime(); 
 
-    loginBtn.addEventListener("click", () => {
-        if (pinInput.value === "1234") {
-            // Animasi Loading SweetAlert2
-            Swal.fire({
-                title: 'Memverifikasi...',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading(); }
-            });
-
-            setTimeout(() => {
-                loginOverlay.style.display = 'none';
-                mainDashboard.classList.remove("hidden");
-                document.dispatchEvent(new Event("dashboardReady"));
-                muatRiwayatRealtime(); // Panggil fungsi realtime Firestore
-                
-                Swal.fire({ icon: 'success', title: 'Akses Diberikan', timer: 1500, showConfirmButton: false });
-            }, 800); // Simulasi jeda loading
-            
-        } else {
-            Swal.fire({ icon: 'error', title: 'PIN Salah', text: 'Silakan gunakan PIN: 1234' });
-            pinInput.value = '';
-        }
-    });
-
-    // --- Sistem Export CSV (Dengan Konfirmasi SweetAlert2) ---
+    // 2. Sistem Export CSV (Dengan Konfirmasi SweetAlert2)
     document.getElementById("export-btn").addEventListener("click", () => {
         if (dbRiwayat.length === 0) {
             Swal.fire({ icon: 'info', title: 'Data Kosong', text: 'Belum ada data untuk diekspor hari ini.' });
@@ -70,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
             text: `Anda akan mengunduh ${dbRiwayat.length} data riwayat ke format CSV.`,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#16a34a', // hijau tailwind
+            confirmButtonColor: '#16a34a',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, Ekspor!',
             cancelButtonText: 'Batal'
