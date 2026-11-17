@@ -1,0 +1,21 @@
+/* Custom Styles */
+
+/* Efek flash/highlight pada baris tabel baru */
+.highlight-row {
+    animation: highlightFade 2s ease-out forwards;
+}
+
+@keyframes highlightFade {
+    0% { background-color: #dbeafe; /* Tailwind blue-100 */ }
+    100% { background-color: transparent; }
+}
+
+/* Memperbaiki tampilan default html5-qrcode agar lebih bersih */
+#reader__dashboard_section_csr span {
+    color: #4b5563; /* text-gray-600 */
+    font-weight: bold;
+}
+#reader__dashboard_section_swaplink {
+    text-decoration: none;
+    color: #2563eb;
+}

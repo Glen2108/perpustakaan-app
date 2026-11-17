@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Perpustakaan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 untuk Notifikasi -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- HTML5 QRCode Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="fixed inset-0 bg-gray-900 z-50 flex flex-col justify-center items-center text-white">
+        <h1 class="text-3xl font-bold mb-6 text-blue-400">Login Petugas Perpustakaan</h1>
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+            <input type="password" id="pin-input" placeholder="Masukkan PIN" class="px-4 py-2 text-black rounded border-2 border-gray-300 text-center text-xl w-48 mb-4 focus:outline-none focus:border-blue-500">
+            <br>
+            <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-bold transition w-full">Masuk</button>
+            <p class="mt-4 text-gray-500 text-sm">(Gunakan PIN: 1234)</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-col lg:flex-row gap-6 hidden flex" id="main-dashboard">
+        
+        <!-- Panel Kiri: Scanner & Info -->
+        <div class="w-full lg:w-1/3 flex flex-col gap-6">
+            
+            <!-- Scanner Box -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-600">
+                <h2 class="text-xl font-bold mb-4">Scanner Kartu Anggota</h2>
+                <div id="reader" class="w-full bg-gray-50 rounded-lg overflow-hidden mb-4 min-h-[250px] border-2 border-dashed border-gray-300"></div>
+                
+                <p class="text-sm text-center text-gray-500 mb-2">Atau gunakan Scanner USB Barcode:</p>
+                <input type="text" id="usb-scanner-input" placeholder="Scan Barcode USB di sini..." class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-50" autofocus>
+            </div>
+
+            <!-- Member Info Box -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Profil Anggota</h2>
+                <div id="member-info" class="text-gray-600">
+                    <div class="flex flex-col items-center justify-center py-6 text-gray-400">
+                        <svg class="w-12 h-12 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
+                        <p class="italic text-center">Menunggu hasil scan...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Kanan: Riwayat Peminjaman -->
+        <div class="w-full lg:w-2/3 bg-white p-6 rounded-xl shadow-lg flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Riwayat Kunjungan Real-time</h2>
+                <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition text-sm shadow">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Export CSV
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-left border-collapse min-w-max">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700 border-b-2 border-gray-200 uppercase text-xs tracking-wider">
+                            <th class="p-3 rounded-tl-lg">Waktu</th>
+                            <th class="p-3">ID Anggota</th>
+                            <th class="p-3">Nama Anggota</th>
+                            <th class="p-3 rounded-tr-lg">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table" class="text-gray-600">
+                        <tr id="empty-state">
+                            <td colspan="4" class="p-8 text-center italic text-gray-400">Belum ada riwayat tercatat hari ini.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts (Terpisah di dalam folder js) -->
+    <script src="js/firebase-config.js" type="module"></script>
+    <script src="js/scanner.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
+</body>
+</html>
